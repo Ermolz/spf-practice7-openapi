@@ -1,5 +1,6 @@
-package com.example.openapi.book;
+package com.example.openapi.service;
 
+import com.example.openapi.entity.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
-package com.example.openapi.book;
+package com.example.openapi.controller;
 
+import com.example.openapi.entity.Book;
+import com.example.openapi.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

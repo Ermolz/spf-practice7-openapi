@@ -1,4 +1,4 @@
-package com.example.openapi.book;
+package com.example.openapi.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
