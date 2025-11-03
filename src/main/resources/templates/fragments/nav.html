@@ -1,0 +1,22 @@
+<nav th:fragment="nav"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div class="wrap">
+        <a th:href="@{/}"
+           th:classappend="${page} == 'home' ? ' active' : ''">Home</a>
+
+        <a th:href="@{/about}"
+           th:classappend="${page} == 'about' ? ' active' : ''">About</a>
+
+        <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"
+           th:classappend="${page} == 'admin' ? ' active' : ''">Admin</a>
+
+        <span class="badge" sec:authorize="isAuthenticated()">
+      <b sec:authentication="name"></b>
+    </span>
+
+        <a th:href="@{/login}" class="button ghost"
+           th:classappend="${page} == 'login' ? 'active' : ''">Login</a>
+    </div>
+</nav>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<main class="container">
+    <section class="card">
+        <h1>Home</h1>
+        <p class="lead">Welcome! This is a demo with pages and role-based authorization.</p>
+
+        <div class="row mt-3">
+            <img class="logo" th:src="@{/img/logo.jpg}" alt="logo"/>
+            <div class="stack">
+                <a th:href="@{/about}" class="button">Go to About</a>
+                <a th:href="@{/admin}" class="button ghost">Open Admin</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="title">Feedback</div>
+        <div class="content card">
+            <form th:action="@{/feedback}" th:object="${feedback}" method="post">
+                <label>Name <input type="text" th:field="*{name}" required></label>
+                <label>Message <textarea th:field="*{message}" required></textarea></label>
+                <button type="submit" class="button">Send</button>
+            </form>
+
+            <div th:if="${sent}" class="alert success mt-3">Thanks! Your message has been sent.</div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="title">Access</div>
+        <div class="content card admin-only" sec:authorize="hasRole('ADMIN')">
+            <p><b>Admin section:</b> you have ADMIN privileges.</p>
+        </div>
+        <div class="content card" sec:authorize="hasRole('USER') and !hasRole('ADMIN')">
+            <p>You are logged in as USER. The admin section is hidden.</p>
+        </div>
+    </section>
+
+    <footer>© Demo</footer>
+</main>
+</body>
+</html>
