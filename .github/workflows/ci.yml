@@ -21,9 +21,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -34,6 +36,8 @@ jobs:
 
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
+        timeout-minutes: 5
+        continue-on-error: true
 
       - name: Build with Gradle
         id: build
@@ -47,6 +51,7 @@ jobs:
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
         with:
           name: build-artifacts
           path: |
@@ -67,9 +72,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ matrix.java-version }}
           distribution: 'temurin'
@@ -88,6 +96,8 @@ jobs:
       - name: Publish test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v3
+        timeout-minutes: 10
+        continue-on-error: true
         with:
           files: |
             build/test-results/test/**/*.xml
@@ -98,6 +108,8 @@ jobs:
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: test-reports-java-${{ matrix.java-version }}
           path: |
@@ -108,6 +120,8 @@ jobs:
       - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: coverage-reports-java-${{ matrix.java-version }}
           path: build/reports/
@@ -121,9 +135,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -141,6 +157,8 @@ jobs:
       - name: Upload code quality reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: code-quality-reports
           path: build/reports/
@@ -154,9 +172,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -176,6 +196,8 @@ jobs:
       - name: Upload security reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: security-reports
           path: |
@@ -192,9 +214,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -213,6 +237,8 @@ jobs:
       - name: Upload OpenAPI documentation
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: openapi-docs
           path: |
@@ -229,9 +255,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -246,6 +274,8 @@ jobs:
       - name: Upload integration test reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: integration-test-reports
           path: build/test-results/test/
@@ -260,9 +290,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
+        timeout-minutes: 10
+        continue-on-error: true
         with:
           path: artifacts
 

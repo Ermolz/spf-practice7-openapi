@@ -16,9 +16,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -39,6 +41,8 @@ jobs:
       - name: Upload nightly reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: nightly-reports-${{ github.run_number }}
           path: |
@@ -53,9 +57,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        timeout-minutes: 5
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
+        timeout-minutes: 10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -72,6 +78,8 @@ jobs:
       - name: Upload dependency reports
         if: always()
         uses: actions/upload-artifact@v4
+        timeout-minutes: 5
+        continue-on-error: true
         with:
           name: dependency-updates-${{ github.run_number }}
           path: build/dependencyUpdates/
