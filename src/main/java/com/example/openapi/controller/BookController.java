@@ -1,5 +1,8 @@
 package com.example.openapi.controller;
 
+import com.example.openapi.aspect.AuditLog;
+import com.example.openapi.aspect.HandleException;
+import com.example.openapi.aspect.RateLimit;
 import com.example.openapi.entity.Book;
 import com.example.openapi.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +29,7 @@ public class BookController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = Book.class)))
     @GetMapping
+    @RateLimit(maxCalls = 20, windowMinutes = 1)
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
@@ -40,6 +44,8 @@ public class BookController {
                     content = @Content)
     })
     @GetMapping("/{id}")
+    @RateLimit(maxCalls = 10, windowMinutes = 1)
+    @HandleException
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         Book book = bookService.findBookById(id);
         return book != null ? ResponseEntity.ok(book) : ResponseEntity.notFound().build();
@@ -55,6 +61,8 @@ public class BookController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @AuditLog
+    @HandleException
     public Book createBook(@RequestBody Book book) {
         return bookService.createBook(book);
     }
@@ -68,6 +76,8 @@ public class BookController {
                     content = @Content)
     })
     @PutMapping("/{id}")
+    @AuditLog // Логуємо оновлення книг
+    @HandleException
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         Book updatedBook = bookService.updateBook(id, book);
         return updatedBook != null ? ResponseEntity.ok(updatedBook) : ResponseEntity.notFound().build();
@@ -82,6 +92,8 @@ public class BookController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @AuditLog // Логуємо видалення книг
+    @HandleException
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }
