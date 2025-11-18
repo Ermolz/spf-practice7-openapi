@@ -33,10 +33,11 @@ jobs:
         run: ./gradlew clean --no-daemon
 
       - name: Full test suite
-        run: ./gradlew test --no-daemon --info
+        run: ./gradlew test --no-daemon
 
-      - name: Generate comprehensive reports
-        run: ./gradlew test jacocoTestReport --no-daemon || true
+      - name: Generate coverage reports
+        run: ./gradlew jacocoTestReport --no-daemon
+        continue-on-error: true
 
       - name: Upload nightly reports
         if: always()
@@ -71,9 +72,8 @@ jobs:
         run: chmod +x gradlew
 
       - name: Check for dependency updates
-        run: |
-          ./gradlew dependencyUpdates --no-daemon || echo "Dependency check completed"
-          echo "Dependency update check would generate a report here"
+        run: ./gradlew dependencyUpdates --no-daemon
+        continue-on-error: true
 
       - name: Upload dependency reports
         if: always()
