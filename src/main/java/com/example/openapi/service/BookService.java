@@ -1,6 +1,8 @@
 package com.example.openapi.service;
 
 import com.example.openapi.entity.Book;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,14 +23,17 @@ public class BookService {
         bookStore.put(3L, new Book(3L, "1984", "George Orwell"));
     }
 
+    @Cacheable(value = "booksList")
     public List<Book> getAllBooks() {
         return new ArrayList<>(bookStore.values());
     }
 
+    @Cacheable(value = "books", key = "#id")
     public Book findBookById(Long id) {
         return bookStore.get(id);
     }
 
+    @CacheEvict(value = {"books", "booksList"}, allEntries = true)
     public Book createBook(Book book) {
         long newId = sequence.incrementAndGet();
         book.setId(newId);
@@ -36,6 +41,7 @@ public class BookService {
         return book;
     }
 
+    @CacheEvict(value = {"books", "booksList"}, allEntries = true)
     public Book updateBook(Long id, Book updatedBook) {
         if (!bookStore.containsKey(id)) {
             return null;
@@ -45,6 +51,7 @@ public class BookService {
         return updatedBook;
     }
 
+    @CacheEvict(value = {"books", "booksList"}, allEntries = true)
     public void deleteBook(Long id) {
         bookStore.remove(id);
     }

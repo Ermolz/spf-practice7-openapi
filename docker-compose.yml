@@ -1,0 +1,23 @@
+services:
+  openapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openapi-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - openapi-network
+
+networks:
+  openapi-network:
+    driver: bridge

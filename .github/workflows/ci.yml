@@ -85,18 +85,6 @@ jobs:
       - name: Run tests
         run: ./gradlew test --no-daemon
 
-      - name: Publish test results
-        if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v3
-        timeout-minutes: 10
-        continue-on-error: true
-        with:
-          files: |
-            build/test-results/test/**/*.xml
-          check_name: "Test Results (Java ${{ matrix.java-version }})"
-          report_individual_runs: true
-          deduplicate_classes_by_file_name: true
-
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
