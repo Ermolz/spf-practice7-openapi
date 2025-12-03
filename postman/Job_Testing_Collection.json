@@ -1,0 +1,93 @@
+{
+	"info": {
+		"_postman_id": "job-testing-collection",
+		"name": "Spring Batch Job Testing Collection",
+		"description": "Collection for testing Spring Batch Job: Book Export Job",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47864958"
+	},
+	"item": [
+		{
+			"name": "Start Book Export Job (Manual)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains job execution information\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.have.property('message');",
+							"    pm.expect(responseData).to.have.property('jobExecutionId');",
+							"    pm.expect(responseData).to.have.property('jobInstanceId');",
+							"    pm.expect(responseData).to.have.property('status');",
+							"});",
+							"",
+							"pm.test(\"Job execution ID is a number\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.jobExecutionId).to.be.a('number');",
+							"});",
+							"",
+							"pm.test(\"Success message is present\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.message).to.include('started successfully');",
+							"});",
+							"",
+							"if (pm.response.json().jobExecutionId) {",
+							"    pm.collectionVariables.set('lastJobExecutionId', pm.response.json().jobExecutionId);",
+							"    console.log('Job Execution ID saved:', pm.response.json().jobExecutionId);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/jobs/book-export/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jobs",
+						"book-export",
+						"start"
+					]
+				},
+				"description": "Manually start the book export job. This will export all books to a CSV file in the exports directory. The job consists of 3 steps: 1) Read books, 2) Validate books, 3) Write books to CSV file."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "lastJobExecutionId",
+			"value": "",
+			"type": "string",
+			"description": "Last job execution ID from the book export job"
+		}
+	]
+}
+
